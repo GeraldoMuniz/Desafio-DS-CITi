@@ -1,2 +1,2 @@
 # Desafio-DS-CITi
-Desafio API CITi
+Tudo o que foi feito está de acordo com os testes (ou seja, funcionando) pedidos no PDF. Está rodando em docker, mas já cheguei a rodar em yarn e npm. Tudo foi feito com base nos códigos dados anteriormente (até por isso eles estão juntos da API das plantas aqui também). Houve dificuldade em tudo, desde a criação de repository até rodar em docker perfeitamente no thunder client, resolvi perguntando à IA. Utilizei o Gemini, desde para entender o que foi proposto até para executar. Ao longo do desafio, fui aprendendo por cima como funciona essa integração e conferi se estava correto fazendo diversos testes (incluindo os propostos).
