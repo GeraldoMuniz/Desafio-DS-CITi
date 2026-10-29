@@ -51,3 +51,12 @@ export const decrementarEstoquePlanta = async (id: number, quantidade: number) =
         },
     });
 };
+
+export const getEstoqueParaCalculo = async () => {
+    return await prisma.planta.findMany({
+        select: {
+            preco: true,
+            estoque: true,
+        },
+    });
+};
