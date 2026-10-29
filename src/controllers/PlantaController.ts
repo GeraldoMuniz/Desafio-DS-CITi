@@ -4,10 +4,11 @@ import * as plantaRepository from "../repositories/PlantaRepository";
 
 export const createPlanta = async (req: Request, res: Response) => {
     try {
-        const { nome, preco, estoque, petFriendly, luminosidade, regaACadaDias } = req.body;
+        const { nome, especie, preco, estoque, petFriendly, luminosidade, regaACadaDias } = req.body;
 
         if (
             typeof nome !== "string" || nome.trim() === "" ||
+            typeof especie !== "string" || especie.trim() === "" ||
             !Number.isInteger(preco) || preco <= 0 ||
             !Number.isInteger(estoque) || estoque < 0 ||
             typeof petFriendly !== "boolean" ||
@@ -19,6 +20,7 @@ export const createPlanta = async (req: Request, res: Response) => {
 
         const novaPlanta = await plantaRepository.createPlanta({
             nome,
+            especie,
             preco,
             estoque,
             petFriendly,
