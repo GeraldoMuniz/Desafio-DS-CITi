@@ -235,3 +235,33 @@ export const findPlantasEsgotadas = async (req: Request, res: Response) => {
         return res.status(500).json({ error: "Erro interno ao buscar plantas esgotadas." });
     }
 };
+
+export const realizarVenda = async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+        const { quantidade } = req.body;
+
+        if (!Number.isInteger(id) || id <= 0) {
+            return res.status(400).json({ error: "ID inválido." });
+        }
+
+        if (!Number.isInteger(quantidade) || quantidade <= 0) {
+            return res.status(400).json({ error: "Quantidade inválida para venda." });
+        }
+
+        const planta = await plantaRepository.findPlantaById(id);
+        if (!planta) {
+            return res.status(404).json({ error: "Planta não encontrada." });
+        }
+
+        if (planta.estoque < quantidade) {
+            return res.status(400).json({ error: "Estoque insuficiente para realizar a venda." });
+        }
+
+        const plantaAtualizada = await plantaRepository.decrementarEstoquePlanta(id, quantidade);
+
+        return res.status(200).json(plantaAtualizada);
+    } catch (error) {
+        return res.status(500).json({ error: "Erro interno ao realizar venda." });
+    }
+};

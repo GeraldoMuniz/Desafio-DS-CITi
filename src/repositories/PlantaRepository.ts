@@ -40,3 +40,14 @@ export const findPlantasEsgotadas = async () => {
         where: { estoque: 0 }
     });
 };
+
+export const decrementarEstoquePlanta = async (id: number, quantidade: number) => {
+    return await prisma.planta.update({
+        where: { id: id },
+        data: {
+            estoque: {
+                decrement: quantidade,
+            },
+        },
+    });
+};
