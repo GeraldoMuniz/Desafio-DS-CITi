@@ -2,21 +2,11 @@ import { Request, Response } from "express";
 import { Luminosidade } from "@prisma/client";
 import * as plantaRepository from "../repositories/PlantaRepository";
 
-export const createPlanta = async (req: Request, res: Response) => {
+export async function createPlanta(req: Request, res: Response) {
     try {
         const { nome, especie, preco, estoque, petFriendly, luminosidade, regaACadaDias } = req.body;
 
-        if (
-            typeof nome !== "string" || nome.trim() === "" ||
-            typeof especie !== "string" || especie.trim() === "" ||
-            !Number.isInteger(preco) || preco <= 0 ||
-            !Number.isInteger(estoque) || estoque < 0 ||
-            typeof petFriendly !== "boolean" ||
-            !Object.values(Luminosidade).includes(luminosidade) ||
-            (regaACadaDias !== undefined && (!Number.isInteger(regaACadaDias) || regaACadaDias < 1))
-        ) {
-            return res.status(400).json({ error: "Dados inválidos ou incompletos para o cadastro da planta." });
-        }
+        const diasParaRega = regaACadaDias !== undefined ? regaACadaDias : 7; // Ajusta o 7 se preferires outro valor
 
         const novaPlanta = await plantaRepository.createPlanta({
             nome,
@@ -25,12 +15,12 @@ export const createPlanta = async (req: Request, res: Response) => {
             estoque,
             petFriendly,
             luminosidade,
-            ...(regaACadaDias !== undefined && { regaACadaDias }),
+            regaACadaDias: diasParaRega,
         });
 
         return res.status(201).json(novaPlanta);
     } catch (error) {
-        return res.status(500).json({ error: "Erro interno ao criar planta." });
+        return res.status(400).json({ error: (error as Error).message });
     }
 };
 
