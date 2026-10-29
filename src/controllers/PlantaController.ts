@@ -226,3 +226,12 @@ export const getValorTotalEstoque = async (req: Request, res: Response) => {
         return res.status(500).json({ error: "Erro interno ao calcular valor total do estoque." });
     }
 };
+
+export const findPlantasEsgotadas = async (req: Request, res: Response) => {
+    try {
+        const plantasEsgotadas = await plantaRepository.findPlantasEsgotadas();
+        return res.status(200).json(plantasEsgotadas);
+    } catch (error) {
+        return res.status(500).json({ error: "Erro interno ao buscar plantas esgotadas." });
+    }
+};
