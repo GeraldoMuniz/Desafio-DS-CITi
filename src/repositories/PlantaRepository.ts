@@ -34,3 +34,9 @@ export const deletePlanta = async (id: number) => {
         where: { id: id }
     });
 };
+
+export const findPlantasEsgotadas = async () => {
+    return await prisma.planta.findMany({
+        where: { estoque: 0 }
+    });
+};
