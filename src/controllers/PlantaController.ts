@@ -194,14 +194,40 @@ export const realizarVenda = async (req: Request, res: Response) => {
             return res.status(400).json({ error: "Estoque insuficiente para realizar a venda." });
         }
 
-        const novoEstoque = planta.estoque - quantidade;
-
-        const plantaAtualizada = await plantaRepository.updatePlanta(id, {
-            estoque: novoEstoque,
-        });
+        const plantaAtualizada = await plantaRepository.decrementarEstoquePlanta(id, quantidade);
 
         return res.status(200).json(plantaAtualizada);
     } catch (error) {
         return res.status(500).json({ error: "Erro interno ao realizar venda." });
+    }
+};
+
+export const findPlantasEsgotadas = async (req: Request, res: Response) => {
+    try {
+        const plantasEsgotadas = await plantaRepository.findPlantasEsgotadas();
+        return res.status(200).json(plantasEsgotadas);
+    } catch (error) {
+        return res.status(500).json({ error: "Erro interno ao buscar plantas esgotadas." });
+    }
+};
+
+export const getValorTotalEstoque = async (req: Request, res: Response) => {
+    try {
+        const plantas = await plantaRepository.getEstoqueParaCalculo();
+
+        let valorTotalEmCentavos = 0;
+        let totalDeVasos = 0;
+
+        for (const planta of plantas) {
+            valorTotalEmCentavos += planta.preco * planta.estoque;
+            totalDeVasos += planta.estoque;
+        }
+
+        return res.status(200).json({
+            valorTotalEmCentavos,
+            totalDeVasos,
+        });
+    } catch (error) {
+        return res.status(500).json({ error: "Erro interno ao calcular valor total do estoque." });
     }
 };
